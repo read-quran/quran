@@ -26,6 +26,7 @@
             right: 0;
             height: 100%;
             z-index: 1000;
+            overflow-y: auto;
         }
         .main-content {
             flex-grow: 1;
@@ -141,6 +142,50 @@
             z-index: 1001;
             transition: right 0.3s ease-in-out;
         }
+        #zoom-control {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 200px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        #zoom-slider {
+            width: 180px;
+            height: 4px;
+            background-color: #ccc;
+            transform: rotate(-90deg);
+            -webkit-appearance: none;
+            outline: none;
+        }
+        #zoom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background-color: #007bff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        #zoom-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background-color: #007bff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .zoom-icon {
+            font-size: 24px;
+            color: #333;
+        }
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -150,6 +195,17 @@
             }
             #toggle-sidebar {
                 right: 0;
+            }
+            #zoom-control {
+                left: 10px;
+                width: 30px;
+                height: 150px;
+            }
+            #zoom-slider {
+                width: 130px;
+            }
+            .zoom-icon {
+                font-size: 18px;
             }
         }
     </style>
@@ -178,10 +234,17 @@
 
     <button id="toggle-sidebar">&#9654;</button>
 
+    <div id="zoom-control">
+        <span class="zoom-icon">+</span>
+        <input type="range" id="zoom-slider" min="100" max="200" value="100" step="10">
+        <span class="zoom-icon">-</span>
+    </div>
+
     <div class="main-content">
         <div id="quran-page-container" role="main"></div>
         <div id="pagination"></div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
     <script>
@@ -238,6 +301,33 @@
             originalInitializePages();
             if (isSidebarVisible) {
                 toggleSidebar();
+            }
+        };
+
+        // إضافة وظيفة التكبير والتصغير
+        const zoomSlider = document.getElementById('zoom-slider');
+        const quranPageContainer = document.getElementById('quran-page-container');
+
+        zoomSlider.addEventListener('input', function() {
+            const zoomLevel = this.value;
+            const quranImage = quranPageContainer.querySelector('img');
+            if (quranImage) {
+                quranImage.style.width = `${zoomLevel}%`;
+                quranImage.style.maxWidth = 'none';
+                quranImage.style.height = 'auto';
+            }
+        });
+
+        // تعديل دالة showCurrentPage لتطبيق مستوى التكبير الحالي
+        const originalShowCurrentPage = window.showCurrentPage;
+        window.showCurrentPage = function() {
+            originalShowCurrentPage();
+            const zoomLevel = zoomSlider.value;
+            const quranImage = quranPageContainer.querySelector('img');
+            if (quranImage) {
+                quranImage.style.width = `${zoomLevel}%`;
+                quranImage.style.maxWidth = 'none';
+                quranImage.style.height = 'auto';
             }
         };
     </script>
