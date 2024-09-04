@@ -9,7 +9,7 @@ function exportToPDF() {
     const imagesToConvert = [];
 
     for (let i = startPage; i <= Math.min(startPage + totalPages - 1, 604); i++) {
-        imagesToConvert.push(fetchAndConvertImageToBase64(`https://3mero.github.io/q/Quran/${i}.png`));
+        imagesToConvert.push(fetchAndConvertImageToBase64(`https://read-quran.github.io/quran/Quran/${i}.jpg`));
     }
 
     Promise.all(imagesToConvert)
@@ -35,7 +35,7 @@ function exportToPDF() {
                 const x = (pdfWidth - finalImgWidth) / 2;
                 const y = (pdfHeight - finalImgHeight) / 2;
                 
-                pdf.addImage(base64Image, 'PNG', x, y, finalImgWidth, finalImgHeight);
+                pdf.addImage(base64Image, 'jpg', x, y, finalImgWidth, finalImgHeight);
                 
                 pdf.setFontSize(10);
                 pdf.text(`${startPage + index}`, pdfWidth / 2, pdfHeight - 10, { align: "center" });
@@ -86,7 +86,7 @@ function showCurrentPage() {
     pageDiv.className = 'quran-page';
 
     const img = document.createElement('img');
-    img.src = `https://3mero.github.io/q/Quran/${currentPage}.png`;
+    img.src = `https://read-quran.github.io/quran/Quran/${currentPage}.jpg`;
     img.alt = `صفحة ${currentPage}`;
 
     const button = document.createElement('button');
@@ -159,7 +159,7 @@ function exportPage() {
     const imagesToConvert = [];
 
     for (let i = startPage; i <= Math.min(startPage + totalPages - 1, 604); i++) {
-        imagesToConvert.push(fetchAndConvertImageToBase64(`https://3mero.github.io/q/Quran/${i}.png`));
+        imagesToConvert.push(fetchAndConvertImageToBase64(`https://read-quran.github.io/quran/Quran/${i}.jpg`));
     }
 
     Promise.all(imagesToConvert)
