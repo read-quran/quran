@@ -20,7 +20,12 @@
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            transition: background-color 0.3s, color 0.3s;
+            transition: transform 0.3s ease-in-out, background-color 0.3s, color 0.3s;
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            z-index: 1000;
         }
         .main-content {
             flex-grow: 1;
@@ -28,7 +33,8 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s, color 0.3s, margin-right 0.3s ease-in-out;
+            margin-right: 250px;
         }
         h1 {
             margin-bottom: 20px;
@@ -41,6 +47,9 @@
         }
         .quran-page img {
             max-width: 100%;
+            width: auto;
+            height: calc(100vh - 40px);
+            object-fit: contain;
             border: 1px solid #ddd;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -111,22 +120,46 @@
             cursor: pointer;
             border: none;
         }
-.thank-you {
-    margin-top: auto;
-    text-align: center;
-    font-style: italic;
-    padding: 10px;
-    border-top: 1px solid rgba(0,0,0,0.1);
-    transition: color 0.3s;
-}
+        .thank-you {
+            margin-top: auto;
+            text-align: center;
+            font-style: italic;
+            padding: 10px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            transition: color 0.3s;
+        }
+        #toggle-sidebar {
+            position: fixed;
+            top: 50%;
+            right: 250px;
+            transform: translateY(-50%);
+            background-color: #343a40;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1001;
+            transition: right 0.3s ease-in-out;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+            }
+            .main-content {
+                margin-right: 0;
+            }
+            #toggle-sidebar {
+                right: 0;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h1 id="page-title">عرض صفحات القرآن</h1>
         <input type="text" id="title-input" placeholder="عنوان الصفحة">
-        <input type="number" id="page-count" placeholder="عدد الصفحات">
         <input type="number" id="start-page" placeholder="بدء العرض من الصفحة رقم">
+        <input type="number" id="page-count" placeholder="عدد الصفحات">
         <button class="sidebar-button" onclick="initializePages()">عرض الصفحات</button>
         <button class="sidebar-button" onclick="exportToPDF()">تصدير كملف PDF</button>
         <button class="sidebar-button" onclick="exportPage()">تصدير كصفحة ويب HTML</button>
@@ -134,15 +167,16 @@
             <button class="color-option" data-color="#343a40" style="background-color: #343a40;"></button>
             <button class="color-option" data-color="#ffffff" style="background-color: #ffffff;"></button>
         </div>
-    <button class="split-pages-button" onclick="window.open('https://3mero.github.io/q/split', '_blank')">
-        تقسيم الصفحات وتنظيمها
-    </button>
-            <button class="split-pages-button" onclick="window.open('https://3mero.github.io/q/604', '_blank')">
-        صفحات جاهزة مقسمة الى 3
-    </button>
+        <button class="split-pages-button" onclick="window.open('https://3mero.github.io/q/split', '_blank')">
+            تقسيم الصفحات وتنظيمها
+        </button>
+        <button class="split-pages-button" onclick="window.open('https://3mero.github.io/q/604', '_blank')">
+            صفحات جاهزة مقسمة الى 3
+        </button>
+        <div class="thank-you">صفحات من موقع easyquran.com مصحف التجويد دار المعرفة </div>
     </div>
-<div class="thank-you">صفحات من موقع easyquran.com مصحف التجويد دار المعرفة </div>
 
+    <button id="toggle-sidebar">&#9654;</button>
 
     <div class="main-content">
         <div id="quran-page-container" role="main"></div>
@@ -151,6 +185,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
     <script>
+        let isSidebarVisible = true;
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const toggleButton = document.getElementById('toggle-sidebar');
+            
+            if (isSidebarVisible) {
+                sidebar.style.transform = 'translateX(100%)';
+                mainContent.style.marginRight = '0';
+                toggleButton.innerHTML = '&#9664;';
+                toggleButton.style.right = '0';
+            } else {
+                sidebar.style.transform = 'translateX(0)';
+                mainContent.style.marginRight = '250px';
+                toggleButton.innerHTML = '&#9654;';
+                toggleButton.style.right = '250px';
+            }
+            
+            isSidebarVisible = !isSidebarVisible;
+        }
+
+        document.getElementById('toggle-sidebar').addEventListener('click', toggleSidebar);
+
         function updateColors(backgroundColor, textColor) {
             document.body.style.backgroundColor = backgroundColor;
             document.body.style.color = textColor;
@@ -173,6 +231,15 @@
 
         // Initialize with default colors
         updateColors('#ffffff', '#000000');
+
+        // Modify initializePages function to hide sidebar after clicking "عرض الصفحات"
+        const originalInitializePages = window.initializePages;
+        window.initializePages = function() {
+            originalInitializePages();
+            if (isSidebarVisible) {
+                toggleSidebar();
+            }
+        };
     </script>
 </body>
 </html>
