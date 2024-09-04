@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقسيم الصفحات</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --form-bg: #f1f1f1;
+        }
+
+        .dark-mode {
+            --bg-color: #333333;
+            --text-color: #f1f1f1;
+            --form-bg: #444444;
+            --light-color: #222222;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--bg-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        #page-splitter {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        #page-splitter button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 25px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #page-splitter button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        #page-splitter button:active {
+            transform: translateY(1px);
+        }
+
+        .form-section {
+            background-color: var(--form-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: right;
+            transition: background-color 0.3s;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 15px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .generate-button {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .generate-button:hover {
+            background-color: #218838;
+        }
+
+        .share-button {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .share-button:hover {
+            background-color: #0056b3;
+        }
+
+        .copy-button {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+
+        .copy-button:hover {
+            background-color: #e0a800;
+        }
+
+        #results-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        #date-dropdown {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1em;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            user-select: text;
+            cursor: text;
+            overflow-y: auto;
+            padding: 10px;
+            text-align: right;
+        }
+
+        .month-separator {
+            border-top: 1px solid var(--primary-color);
+            margin: 10px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .month-separator::before {
+            content: attr(data-month);
+            background-color: var(--bg-color);
+            padding: 0 10px;
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -75px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: color 0.3s;
+        }
+
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button-group button {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <i class="fas fa-adjust"></i>
+    </button>
+
+    <div class="container">
+        <h1>تقسيم الصفحات</h1>
+
+        <div id="page-splitter">
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="pages-per-day">عدد الصفحات لكل يوم:</label>
+                    <input id="pages-per-day" type="number" min="1" value="3">
+                </div>
+
+                <div class="form-group">
+                    <label for="start-page">بداية العرض من الصفحة:</label>
+                    <input id="start-page" type="number" min="1" max="604" value="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="start-date">تاريخ البدء:</label>
+                    <input id="start-date" type="date">
+                </div>
+
+                <div class="form-group">
+                    <label for="num-days">عدد الأيام....في حال عدم التحديد سيتم عرض 604 صفحة لكامل المصحف</label>
+                    <input id="num-days" type="number" min="1">
+                </div>
+
+                <div class="button-group">
+                    <button class="generate-button" onclick="generateDateDropdown()">
+                        <i class="fas fa-calendar-alt"></i> عرض التقسيم
+                    </button>
+                </div>
+            </div>
+
+            <div id="results-section">
+                <div id="date-dropdown">
+                    <!-- سيتم إضافة التواريخ هنا -->
+                </div>
+
+                    <button class="copy-button tooltip" onclick="copyDates()">
+                        <i class="far fa-copy"></i> نسخ إلى الحافظة
+                        <span class="tooltiptext" id="copyTooltip">انقر للنسخ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('start-date').value = today;
+        });
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+
+        function generateDateDropdown() {
+            const resultsSection = document.getElementById('results-section');
+            const dropdown = document.getElementById('date-dropdown');
+            dropdown.innerHTML = '';
+
+            const totalPages = 604;
+            const pagesPerDay = parseInt(document.getElementById('pages-per-day').value);
+            const startPage = parseInt(document.getElementById('start-page').value);
+            const startDate = new Date(document.getElementById('start-date').value);
+            const numDays = parseInt(document.getElementById('num-days').value) || Math.ceil((totalPages - startPage + 1) / pagesPerDay);
+
+            if (isNaN(pagesPerDay) || isNaN(startPage) || !startDate || startPage < 1 || startPage > totalPages) {
+                alert("يرجى إدخال قيم صحيحة لجميع الحقول.");
+                return;
+            }
+
+            let currentPage = startPage;
+            let currentStartDate = new Date(startDate);
+            let currentMonth = '';
+
+            for (let i = 0; i < numDays && currentPage <= totalPages; i++) {
+                const endPage = Math.min(currentPage + pagesPerDay - 1, totalPages);
+                const dateString = currentStartDate.toLocaleDateString('ar-LY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                const monthYear = currentStartDate.toLocaleDateString('ar-LY', { year: 'numeric', month: 'long' });
+
+                if (monthYear !== currentMonth) {
+                    if (currentMonth !== '') {
+                        dropdown.innerHTML += '<div class="month-separator" data-month="' + monthYear + '"></div>';
+                    }
+                    currentMonth = monthYear;
+                }
+
+                dropdown.innerHTML += `<div>${dateString}: الصفحات ${currentPage} - ${endPage}</div>`;
+
+                currentPage = endPage + 1;
+                currentStartDate.setDate(currentStartDate.getDate() + 1);
+            }
+
+            resultsSection.style.display = 'block';
+        }
+
+        function getFormattedText() {
+            const dropdown = document.getElementById('date-dropdown');
+            let formattedText = "تقسيم الصفحات:\n\n";
+            let currentMonth = '';
+
+            dropdown.childNodes.forEach((node) => {
+                if (node.className === 'month-separator') {
+                    formattedText += "\n" + "=".repeat(20) + "\n";
+                    formattedText += node.getAttribute('data-month') + "\n";
+                    formattedText += "=".repeat(20) + "\n\n";
+                } else if (node.textContent) {
+                    formattedText += node.textContent + "\n";
+                }
+            });
+
+            return formattedText;
+        }
+
+        function shareDates() {
+            const formattedText = getFormattedText();
+
+            if (formattedText.trim() !== "تقسيم الصفحات:") {
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(formattedText)}`;
+                window.open(whatsappUrl, '_blank');
+            } else {
+                alert("لا يوجد بيانات لمشاركتها.");
+            }
+        }
+
+        function copyDates() {
+            const formattedText = getFormattedText();
+
+            if (formattedText.trim() !== "تقسيم الصفحات :") {
+                const tempTextArea = document.createElement("textarea");
+                tempTextArea.value = formattedText;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert("تم النسخ بنجاح!");
+                } catch (err) {
+                    console.error('حدث خطأ أثناء النسخ: ', err);
+                    alert("حدث خطأ أثناء النسخ. يرجى المحاولة مرة أخرى.");
+                }
+                document.body.removeChild(tempTextArea);
+            } else {
+                alert("لا يوجد بيانات لنسخها.");
+            }
+        }
+    </script>
+</body>
+</html>

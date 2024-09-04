@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحات من القرآن الكريم</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            background-color: #2f2f2f;
+            color: black;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .lightbulb {
+            background-color: #ffdd00;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffdd00;
+            margin-bottom: 20px;
+        }
+        .lightbulb:hover {
+            box-shadow: 0 0 20px #ffdd00;
+        }
+        .dropdown {
+            margin-bottom: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+        }
+        .text-input {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+        }
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            padding: 5px 15px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            width: 80%;
+            text-align: center;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        .whatsapp-btn:hover {
+            background-color: #1ebc58;
+        }
+        .last-shared {
+            font-size: 14px;
+            color: #555;
+            margin-top: 20px;
+        }
+        .last-shared .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .last-shared .box {
+            background-color: #eee;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .last-shared .box span {
+            font-weight: bold;
+            display: inline-block;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <button class="lightbulb" onclick="toggleBackgroundColor()">💡</button>
+        
+        <div class="dropdown">
+            <label for="pages">اختر الصفحات:</label>
+            <select id="pages">
+                <script>
+                    for (let i = 1; i <= 604; i += 3) {
+                        let end = i + 2;
+                        if (end > 604) end = 604
+                        let link = `https://3mero.github.io/q/p/${end}-${i}`;
+                        let option = document.createElement("option");
+                        option.value = link;
+                        option.text = `${i} إلى ${end}`;
+                        document.getElementById("pages").appendChild(option);
+                    }
+                </script>
+            </select>
+        </div>
+
+        <div class="text-input">
+            <label for="title">اكتب عنوان:</label>
+            <input type="text" id="title" placeholder="اكتب عنوان هنا...">
+        </div>
+
+        <a id="whatsapp-link" class="whatsapp-btn" href="#" onclick="shareOnWhatsApp()">مشاركة على واتساب</a>
+
+        <div id="last-shared" class="last-shared">
+            <div class="title">آخر صفحة تمت مشاركتها</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadLastShared();
+        });
+
+        function toggleBackgroundColor() {
+            let body = document.body;
+            if (body.style.backgroundColor === 'white') {
+                body.style.backgroundColor = '#2f2f2f';
+                body.style.color = 'white';
+            } else {
+                body.style.backgroundColor = 'white';
+                body.style.color = 'black';
+            }
+        }
+
+        function shareOnWhatsApp() {
+            let pageSelect = document.getElementById("pages");
+            let pageText = pageSelect.options[pageSelect.selectedIndex].text;
+            let pageLink = pageSelect.value;
+            let title = document.getElementById("title").value;
+            let now = new Date();
+            let days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            let dayName = days[now.getDay()];
+            let formattedDate = now.toLocaleString("en-OM", {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            let formattedTime = now.toLocaleTimeString("en-OM", {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            
+            // تعديل نص الصفحات لعكس الترتيب
+            let pageNumbers = pageText.split(" إلى ");
+            let reversedPageText = `${pageNumbers[0]} إلى ${pageNumbers[1]}`;
+            
+            let message = `${title} | الصفحات من ${reversedPageText} | الرابط: ${pageLink}`;
+            let whatsappLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            document.getElementById("whatsapp-link").href = whatsappLink;
+
+            saveLastShared(dayName, formattedDate, formattedTime, title, reversedPageText, pageLink);
+        }
+
+        function saveLastShared(dayName, formattedDate, formattedTime, title, pageText, pageLink) {
+            let lastShared = `
+                <div class="box"><span>اليوم:</span> ${dayName}</div>
+                <div class="box"><span>التاريخ:</span> ${formattedDate}</div>
+                <div class="box"><span>الساعة:</span> ${formattedTime}</div>
+                <div class="box"><span>العنوان:</span> ${title}</div>
+                <div class="box"><span>الصفحات:</span> ${pageText}</div>
+                <div class="box"><span>الرابط:</span> <a href="${pageLink}" target="_blank">${pageLink}</a></div>
+            `;
+            localStorage.setItem("lastShared", lastShared);
+            document.getElementById("last-shared").innerHTML = '<div class="title">آخر صفحة تمت مشاركتها</div>' + lastShared;
+        }
+
+        function loadLastShared() {
+            let lastShared = localStorage.getItem("lastShared");
+            if (lastShared) {
+                document.getElementById("last-shared").innerHTML = '<div class="title">آخر صفحة تمت مشاركتها</div>' + lastShared;
+            }
+        }
+    </script>
+
+</body>
+</html>

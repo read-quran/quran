@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>عرض صفحات القرآن</title>
+    <link rel="stylesheet" href="styles.css">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1 id="page-title">عرض صفحات القرآن</h1>
+        <input type="text" id="title-input" placeholder="أدخل عنوان الصفحة" />
+        <div id="color-buttons">
+            <button class="color-option" data-color="#343a40" style="background-color: #343a40;"></button>
+            <button class="color-option" data-color="#ffffff" style="background-color: #ffffff;"></button>
+        </div>
+    <button class="split-pages-button" onclick="window.open('https://3mero.github.io/q/split', '_blank')">
+        تقسيم الصفحات لأيام
+    </button>
+            <button class="split-pages-button" onclick="window.open('https://3mero.github.io/q/604', '_blank')">
+        صفحات مقسمة الى 3
+    </button>
+            <footer>
+        <label for="page-count">عدد الصفحات:</label>
+        <input type="number" id="page-count" min="1" max="604" value="1">
+        <label for="start-page">بدء العرض من الصفحة رقم:</label>
+        <input type="number" id="start-page" min="1" max="604" value="1">
+        <button onclick="initializePages()">(1)عرض الصفحات</button>
+            <button onclick="exportToPDF()">(2)تصدير كملف PDF</button>
+        <button onclick="exportPage()">تصدير كصفحة ويب HTML</button>
+        
+    </footer>
+    </header>
+
+    <main id="quran-page-container" role="main">
+    </main>
+
+    <div id="pagination"></div>
+
+
+
+    <script src="script.js"></script>
+</body>
+</html>

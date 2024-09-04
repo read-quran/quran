@@ -1,0 +1,251 @@
+body {
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    text-align: center;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header {
+    padding: 10px;
+    background-color: #343a40;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.split-pages-button {
+    background-color: var(--primary-color, #007bff);
+    color: white;
+    padding: 15px 25px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    margin-top: 20px;
+}
+
+.split-pages-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.split-pages-button:active {
+    transform: translateY(1px);
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.5em;
+    text-align: center;
+}
+
+#title-input {
+    margin-top: 15px;
+    padding: 10px;
+    font-size: 1.2em;
+    width: 80%;
+    max-width: 600px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+#title-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+main {
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
+
+.quran-page {
+    max-width: 100%;
+    position: relative;
+}
+
+.quran-page img {
+    max-width: 95%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.read-button {
+    margin-top: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 1em;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.read-button:hover {
+    background-color: #218838;
+}
+
+#color-buttons {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s;
+    border: none;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+footer {
+    padding: 20px;
+    background-color: #343a40;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer label {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+footer input {
+    padding: 10px;
+    margin: 5px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    width: 80%;
+    max-width: 200px;
+}
+
+footer button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin-top: 10px;
+    font-size: 1em;
+    width: 80%;
+    max-width: 200px;
+}
+
+footer button:hover {
+    background-color: #0056b3;
+}
+
+.share-button {
+    background-color: #25D366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin-top: 10px;
+    font-size: 1em;
+    display: inline-block;
+}
+
+.share-button:hover {
+    background-color: #128C7E;
+}
+
+#pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.page-button {
+    margin: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.page-button.current-page {
+    background-color: #28a745;
+    color: white;
+}
+
+.page-button.read-page {
+    background-color: #007bff;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .quran-page {
+        max-width: 100%;
+    }
+
+    footer input,
+    footer button {
+        font-size: 0.9em;
+    }
+
+    #color-buttons {
+        left: 10px;
+    }
+
+    .color-option {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    #title-input {
+        font-size: 1em;
+        width: 100%;
+    }
+
+    footer label,
+    footer input,
+    footer button {
+        font-size: 0.8em;
+        width: 100%;
+    }
+}
