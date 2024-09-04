@@ -121,13 +121,14 @@
             cursor: pointer;
             border: none;
         }
-        .thank-you {
-            margin-top: auto;
-            text-align: center;
-            font-style: italic;
-            padding: 10px;
-            border-top: 1px solid rgba(0,0,0,0.1);
-            transition: color 0.3s;
+            .thank-you {
+           margin-top: auto;
+           margin-bottom: 20px;  /* أضفنا هذا السطر */
+             text-align: center;
+          font-style: italic;
+          padding: 10px;
+          border-top: 1px solid rgba(0,0,0,0.1);
+          transition: color 0.3s;
         }
         #toggle-sidebar {
             position: fixed;
@@ -143,26 +144,22 @@
             transition: right 0.3s ease-in-out;
         }
         #zoom-control {
-            position: fixed;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 40px;
-            height: 200px;
+            width: 100%;
+            max-width: 300px;
+            height: 40px;
             background-color: rgba(0, 0, 0, 0.1);
             border-radius: 20px;
             display: flex;
-            flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            z-index: 1000;
+            padding: 0 10px;
+            margin-top: 20px;
+            box-sizing: border-box;
         }
         #zoom-slider {
-            width: 180px;
+            width: 70%;
             height: 4px;
             background-color: #ccc;
-            transform: rotate(-90deg);
             -webkit-appearance: none;
             outline: none;
         }
@@ -197,12 +194,7 @@
                 right: 0;
             }
             #zoom-control {
-                left: 10px;
-                width: 30px;
-                height: 150px;
-            }
-            #zoom-slider {
-                width: 130px;
+                max-width: 250px;
             }
             .zoom-icon {
                 font-size: 18px;
@@ -229,20 +221,20 @@
         <button class="split-pages-button" onclick="window.open('https://3mero.github.io/q/604', '_blank')">
             صفحات جاهزة مقسمة الى 3
         </button>
-        <div class="thank-you">صفحات من موقع easyquran.com مصحف التجويد دار المعرفة </div>
+        <div class="thank-you">تم عرض الصور للصفحات من موقع easyquran.com مصحف التجويد دار المعرفة </div>
     </div>
+ </div>
 
     <button id="toggle-sidebar">&#9654;</button>
-
-    <div id="zoom-control">
-        <span class="zoom-icon">+</span>
-        <input type="range" id="zoom-slider" min="100" max="200" value="100" step="10">
-        <span class="zoom-icon">-</span>
-    </div>
 
     <div class="main-content">
         <div id="quran-page-container" role="main"></div>
         <div id="pagination"></div>
+        <div id="zoom-control">
+            <span class="zoom-icon">-</span>
+            <input type="range" id="zoom-slider" min="100" max="200" value="100" step="10">
+            <span class="zoom-icon">+</span>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
