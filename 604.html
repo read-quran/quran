@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحات من القرآن الكريم</title>
+    <style>
+        /* التنسيقات العامة */
+        body {
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* الـ container الرئيسي */
+        .container {
+            max-width: 600px;
+            width: 90%;
+            padding: 30px;
+            background-color: #2c2c2c;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 50px;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        /* القائمة المنسدلة */
+        .dropdown {
+            margin-bottom: 25px;
+        }
+
+        .dropdown label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .dropdown .select-pages-label {
+            color: red;
+            font-weight: bold;
+        }
+
+        .dropdown select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #3a3a3a;
+            border: 1px solid #555;
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .dropdown select:focus {
+            outline: none;
+            border-color: #ffdd00;
+        }
+
+        .last-shared-pages {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: red;
+            text-align: center;
+        }
+
+        /* حقل النص */
+        .text-input {
+            margin-bottom: 25px;
+        }
+
+        .text-input label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .text-input input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #3a3a3a;
+            border: 1px solid #555;
+            border-radius: 8px;
+            color: #ffffff;
+        }
+
+        .text-input input[type="text"]:focus {
+            outline: none;
+            border-color: #ffdd00;
+        }
+
+        /* زر المشاركة على واتساب */
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            display: block;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #1ebc58;
+        }
+
+        /* آخر صفحة تمت مشاركتها */
+        .last-shared {
+            font-size: 14px;
+            color: #aaaaaa;
+            margin-top: 25px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .last-shared .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .last-shared .box {
+            background-color: #3a3a3a;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            text-align: left;
+            color: #ffffff;
+        }
+
+        .last-shared .box span {
+            font-weight: bold;
+            display: inline-block;
+            width: 100px;
+            color: #ffdd00;
+        }
+
+        /* أزرار التنقل */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .navigation-buttons button {
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background-color: #25D366;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        .navigation-buttons button:hover {
+            background-color: #1ebc58;
+        }
+
+        .last-shared .box a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .last-shared .box a:hover {
+            color: #ffdd00;
+        }
+
+        .last-shared .box.pages-box {
+            border: 2px solid red;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #3a3a3a;
+            margin-bottom: 15px;
+        }
+
+        .last-shared .box.pages-box span {
+            color: #ffdd00;
+        }
+
+        .today-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #3a3a3a;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .today-info span {
+            display: block;
+            margin: 5px 0;
+        }
+
+        .today-info .date {
+            color: #ffdd00;
+            font-weight: bold;
+        }
+
+        .today-info .day-name {
+            color: #25D366;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الـ container الرئيسي -->
+    <div class="container">
+        <!-- قسم التاريخ واسم اليوم -->
+        <div class="today-info" id="today-info">
+            <span class="day-name" id="day-name"></span>
+            <span class="date" id="date"></span>
+        </div>
+
+        <!-- القائمة المنسدلة -->
+        <div class="dropdown">
+            <label for="pages" class="select-pages-label">اختر الصفحات:</label>
+            <select id="pages">
+                <!-- سيتم ملء الخيارات ديناميكيًا -->
+            </select>
+            <span id="last-shared-pages" class="last-shared-pages"></span>
+        </div>
+              <!-- أزرار التنقل -->
+        <div class="navigation-buttons">
+            <button onclick="navigate(-1)">السابق</button>
+            <button onclick="navigate(1)">التالي</button>
+        </div>
+
+        <!-- إعدادات عدد الصفحات -->
+        <div class="dropdown">
+            <label for="page-count">عدد الصفحات:</label>
+            <select id="page-count" onchange="confirmPageCountChange()">
+                          <option value="1">1 صفحة</option>
+                <option value="2">2 صفحات</option>
+                <option value="3">3 صفحات</option>
+                <option value="4">4 صفحات</option>
+                <option value="5">5 صفحات</option>
+                <option value="6">6 صفحات</option>
+                <option value="7">7 صفحات</option>
+                <option value="8">8 صفحات</option>
+                <option value="9">9 صفحات</option>
+                <option value="10">10 صفحات</option>
+                         <option value="20">20 صفحات</option> 
+            </select>
+        </div>
+
+        <!-- حقل النص -->
+        <div class="text-input">
+            <label for="title">اكتب عنوان:</label>
+            <input type="text" id="title" placeholder="اكتب عنوان هنا...">
+        </div>
+
+        <!-- زر المشاركة على واتساب -->
+        <a id="whatsapp-link" class="whatsapp-btn" href="#" onclick="shareOnWhatsApp()">مشاركة على واتساب</a>
+
+        <!-- آخر صفحة تمت مشاركتها -->
+        <div id="last-shared" class="last-shared">
+            <div class="title">آخر صفحة تمت مشاركتها</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadSettings();
+            loadLastShared();
+            loadLastSelectedPage();
+            displayTodayInfo();
+            updateDropdown();
+            loadLastSharedPages(); // تحميل آخر نطاق صفحات تمت مشاركته
+        });
+
+        function confirmPageCountChange() {
+            let confirmChange = confirm("هل أنت متأكد من تغيير عدد الصفحات؟");
+            if (confirmChange) {
+                saveSettings();
+            } else {
+                // إعادة تعيين القيمة إلى القيمة السابقة
+                let pageCount = localStorage.getItem('pageCount') || 3;
+                document.getElementById('page-count').value = pageCount;
+            }
+        }
+
+        function saveSettings() {
+            let pageCount = document.getElementById('page-count').value;
+            localStorage.setItem('pageCount', pageCount);
+            updateDropdown();
+        }
+
+        function loadSettings() {
+            let pageCount = localStorage.getItem('pageCount') || 3;
+            document.getElementById('page-count').value = pageCount;
+        }
+
+function updateDropdown() {
+    let pageCount = localStorage.getItem('pageCount') || 3;
+    let pagesSelect = document.getElementById('pages');
+    pagesSelect.innerHTML = '';
+
+    if (pageCount == 1) {
+        // إذا كان عدد الصفحات 1، ننشئ روابط بنمط 1، 2، 3، إلخ
+        for (let i = 1; i <= 604; i++) {
+            let link = `https://read-quran.github.io/quran/1-Pages/${i}`; // الرابط: 1 بدلاً من 1-1
+            let option = document.createElement("option");
+            option.value = link;
+            option.text = `${i}`; // النص المعروض: 1، 2، 3، إلخ
+            pagesSelect.appendChild(option);
+        }
+    } else {
+        // إذا كان عدد الصفحات أكثر من 1، ننشئ الروابط كما كانت
+        for (let i = 1; i <= 604; i += parseInt(pageCount)) {
+            let end = i + parseInt(pageCount) - 1;
+            if (end > 604) end = 604;
+            let link = `https://read-quran.github.io/quran/${pageCount}-Pages/${end}-${i}`;
+            let option = document.createElement("option");
+            option.value = link;
+            option.text = `${i} إلى ${end}`;
+            pagesSelect.appendChild(option);
+        }
+    }
+}
+
+function shareOnWhatsApp() {
+    let pageSelect = document.getElementById("pages");
+    let pageText = pageSelect.options[pageSelect.selectedIndex].text;
+    let pageLink = pageSelect.value;
+    let title = document.getElementById("title").value;
+    let now = new Date();
+    let days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+    let dayName = days[now.getDay()];
+    let formattedDate = now.toLocaleString("en-OM", {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    let formattedTime = now.toLocaleTimeString("en-OM", {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+
+    let message;
+    if (localStorage.getItem('pageCount') == 1) {
+        message = `${title} | الصفحة ${pageText} | الرابط: ${pageLink}`; // إذا كانت صفحة واحدة، نستخدم النص "الصفحة 1"
+    } else {
+        message = `${title} | الصفحات من ${pageText} | الرابط: ${pageLink}`;
+    }
+
+    let whatsappLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+    document.getElementById("whatsapp-link").href = whatsappLink;
+
+    saveLastShared(dayName, formattedDate, formattedTime, title, pageText, pageLink);
+    saveLastSelectedPage(pageSelect.selectedIndex);
+
+    // حفظ آخر نطاق صفحات تمت مشاركته
+    localStorage.setItem("lastSharedPages", pageText);
+    updateLastSharedPages(); // تحديث العرض
+}
+
+        function updateLastSharedPages() {
+            let lastSharedPages = localStorage.getItem("lastSharedPages");
+            if (lastSharedPages) {
+                document.getElementById("last-shared-pages").textContent = `آخر صفحات تمت مشاركتها: ${lastSharedPages}`;
+            }
+        }
+
+        function loadLastSharedPages() {
+            let lastSharedPages = localStorage.getItem("lastSharedPages");
+            if (lastSharedPages) {
+                document.getElementById("last-shared-pages").textContent = `آخر صفحات تمت مشاركتها: ${lastSharedPages}`;
+            }
+        }
+
+function saveLastShared(dayName, formattedDate, formattedTime, title, pageText, pageLink) {
+    let now = new Date();
+    let formattedDateArabic = now.toLocaleDateString('ar-LY', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    let lastShared = `
+        <div class="box"><span>آخر يوم مشاركة:</span> ${dayName}</div>
+        <div class="box"><span>التاريخ:</span> ${formattedDateArabic}</div>
+        <div class="box"><span>الساعة:</span> ${formattedTime}</div>
+        <div class="box"><span>العنوان:</span> ${title}</div>
+        <div class="box pages-box"><span>الصفحات:</span> ${pageText}</div>
+        <div class="box"><span>الرابط:</span> <a href="${pageLink}" target="_blank">${pageLink}</a></div>
+    `;
+    localStorage.setItem("lastShared", lastShared);
+    document.getElementById("last-shared").innerHTML = '<div class="title">آخر صفحة تمت مشاركتها</div>' + lastShared;
+}
+      
+      // حفظ آخر اختيار للصفحات
+function saveLastSelectedPage() {
+    let pageSelect = document.getElementById("pages");
+    let selectedIndex = pageSelect.selectedIndex;
+    localStorage.setItem("lastSelectedPageIndex", selectedIndex); // حفظ الفهرس المحدد
+}
+
+// تحميل آخر اختيار للصفحات
+function loadLastSelectedPage() {
+    let pageSelect = document.getElementById("pages");
+    let lastSelectedIndex = localStorage.getItem("lastSelectedPageIndex");
+
+    if (lastSelectedIndex !== null) {
+        pageSelect.selectedIndex = lastSelectedIndex; // تعيين الفهرس المحفوظ
+    }
+}
+
+// عند تغيير القائمة المنسدلة
+document.getElementById("pages").addEventListener("change", function() {
+    saveLastSelectedPage(); // حفظ الاختيار الحالي
+});
+
+// عند تحميل الصفحة
+document.addEventListener("DOMContentLoaded", function() {
+    loadLastSelectedPage(); // تحميل آخر اختيار
+});
+
+        function loadLastShared() {
+            let lastShared = localStorage.getItem("lastShared");
+            if (lastShared) {
+                document.getElementById("last-shared").innerHTML = '<div class="title">آخر صفحة تمت مشاركتها</div>' + lastShared;
+            }
+        }
+
+        function saveLastSelectedPage(index) {
+            localStorage.setItem("lastSelectedPage", index);
+        }
+
+        function loadLastSelectedPage() {
+            let lastSelectedPage = localStorage.getItem("lastSelectedPage");
+            if (lastSelectedPage !== null) {
+                document.getElementById("pages").selectedIndex = lastSelectedPage;
+            }
+        }
+
+        function navigate(direction) {
+            let pageSelect = document.getElementById("pages");
+            let currentIndex = pageSelect.selectedIndex;
+            let newIndex = currentIndex + direction;
+
+            if (newIndex >= 0 && newIndex < pageSelect.options.length) {
+                pageSelect.selectedIndex = newIndex;
+                saveLastSelectedPage(newIndex);
+            }
+        }
+
+        function displayTodayInfo() {
+            let now = new Date();
+            let days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            let dayName = days[now.getDay()];
+
+            let formattedDate = now.toLocaleDateString('ar-LY', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            document.getElementById('day-name').textContent = `اليوم الحالي: ${dayName}`;
+            document.getElementById('date').textContent = `تاريخ اليوم: ${formattedDate}`;
+        }
+    </script>
+
+</body>
+</html>
