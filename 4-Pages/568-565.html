@@ -1,0 +1,175 @@
+
+        <!DOCTYPE html>
+        <html lang="ar">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>صفحات القرآن 565-568</title>
+            <style>
+                body { font-family: Arial, sans-serif; direction: rtl; text-align: center; background-color: #343434; transition: background-color 0.3s; }
+                .quran-page { margin-bottom: 20px; }
+                .quran-page img { max-width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 5px; background-color: white; }
+                .read-button { margin-top: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 10px 20px; font-size: 1em; display: inline-block; }
+                .read-button:hover { background-color: #218838; }
+                .share-button { background-color: #25D366; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 10px 20px; font-size: 1em; display: inline-block; margin-top: 20px; }
+                .share-button:hover { background-color: #1ebd56; }
+                #color-buttons { display: flex; justify-content: center; margin-top: 15px; }
+                .color-option { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; margin: 0 5px; transition: transform 0.3s; }
+                .color-option:hover { transform: scale(1.1); }
+                p.finished-text { color: #28a745; font-size: 1.2em; font-weight: bold; }
+                #pagination { margin-top: 20px; }
+                .page-button { margin: 0 5px; padding: 5px 10px; cursor: pointer; border: 1px solid #ddd; background-color: #f8f9fa; border-radius: 5px; }
+                .page-button.current-page { background-color: #28a745; color: white; }
+                .page-button.read-page { background-color: #007bff; color: white; }
+            </style>
+        </head>
+        <body>
+            <main id="quran-page-container">
+                
+            <div class="quran-page">
+                <img src="https://read-quran.github.io/quran/Quran/565.jpg" alt="صفحة 565">
+                <button class="read-button" onclick="nextPage()">تمت القراءة</button>
+            </div>
+        
+            <div class="quran-page">
+                <img src="https://read-quran.github.io/quran/Quran/566.jpg" alt="صفحة 566">
+                <button class="read-button" onclick="nextPage()">تمت القراءة</button>
+            </div>
+        
+            <div class="quran-page">
+                <img src="https://read-quran.github.io/quran/Quran/567.jpg" alt="صفحة 567">
+                <button class="read-button" onclick="nextPage()">تمت القراءة</button>
+            </div>
+        
+            <div class="quran-page">
+                <img src="https://read-quran.github.io/quran/Quran/568.jpg" alt="صفحة 568">
+                <button class="read-button" onclick="nextPage()">تمت القراءة</button>
+            </div>
+        
+            </main>
+            <div id="pagination"></div>
+            <script>
+                let currentPage = 565;
+                let totalPages = 4;
+                const startPage = 565;
+                const startTime = new Date();
+
+                function resetToFirstPage() {
+                    currentPage = startPage;
+                    showCurrentPage();
+                }
+
+                function nextPage() {
+                    currentPage++;
+                    showCurrentPage();
+                }
+
+                function goToPage(page) {
+                    currentPage = page;
+                    showCurrentPage();
+                }
+
+                function shareOnWhatsApp() {
+                    const endTime = new Date();
+                    const timeDiff = endTime - startTime;
+
+                    const currentDate = endTime.toLocaleDateString('en-GB');
+                    const currentTime = endTime.toLocaleTimeString('en-GB', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    });
+
+                    const hijriDate = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', {
+                        day: 'numeric',
+                        month: 'numeric',
+                        year: 'numeric'
+                    }).format(endTime);
+
+                    const message = encodeURIComponent(
+                        `صَدَقَ اللهُ العَظِيمُ، وَبَلَّغَ رَسُولُهُ الكَرِيمُ، اللهُمَّ انْفَعْنَا بِهِ وَبَارَكَ لَنَا فِيهِ، أَسْتَغْفِرُ اللَّهَ العَظِيمَ الَّذي لا إِلهَ إِلا هُوَ الحيُّ القَيُّومُ .
+                        
+     تم بحمد لله وتوفيقه قراءة المقرر اليومي ✓
+      من الصفحة ${startPage} الى الصفحة ${currentPage - 1}
+     . التاريخ : ${currentDate} ${currentTime}`
+                    );
+
+                    window.open(`https://wa.me/?text=${message}`, '_blank');
+                }
+
+                function showCurrentPage() {
+                    const container = document.getElementById('quran-page-container');
+                    container.innerHTML = '';
+
+                    if (currentPage > startPage + totalPages - 1 || currentPage > 604) {
+                        container.innerHTML = '<p class="finished-text">تم الانتهاء من جميع الصفحات</p>';
+
+                        const backButton = document.createElement('button');
+                        backButton.className = 'read-button';
+                        backButton.textContent = 'العودة لأول صفحة';
+                        backButton.onclick = resetToFirstPage;
+
+                        const shareButton = document.createElement('button');
+                        shareButton.className = 'share-button';
+                        shareButton.textContent = 'مشاركة عبر الواتساب';
+                        shareButton.onclick = shareOnWhatsApp;
+
+                        container.appendChild(backButton);
+                        container.appendChild(shareButton);
+                        return;
+                    }
+
+                    const pageDiv = document.createElement('div');
+                    pageDiv.className = 'quran-page';
+
+                    const img = document.createElement('img');
+                    img.src =  `https://read-quran.github.io/quran/Quran/${currentPage}.jpg`;
+                    img.alt = `صفحة ${currentPage}`;
+
+                    const button = document.createElement('button');
+                    button.className = 'read-button';
+                    button.textContent = 'تمت القراءة';
+                    button.onclick = nextPage;
+
+                    img.onerror = () => {
+                        img.alt = `تعذر تحميل صفحة ${currentPage}`;
+                    };
+
+                    pageDiv.appendChild(img);
+                    pageDiv.appendChild(button);
+                    container.appendChild(pageDiv);
+                                updatePagination();
+                }
+
+                function updatePagination() {
+                    const paginationContainer = document.getElementById('pagination');
+                    paginationContainer.innerHTML = '';
+
+                    const totalPageCount = Math.min(startPage + totalPages - 1, 604);
+                    
+                    for (let i = startPage; i <= totalPageCount; i++) {
+                        const pageButton = document.createElement('button');
+                        pageButton.textContent = i;
+                        pageButton.className = 'page-button';
+                        if (i === currentPage) {
+                            pageButton.classList.add('current-page');
+                        }
+                        if (i < currentPage) {
+                            pageButton.classList.add('read-page');
+                        }
+                        pageButton.onclick = () => goToPage(i);
+                        paginationContainer.appendChild(pageButton);
+                    }
+                }
+
+                document.querySelectorAll('.color-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        document.body.style.backgroundColor = this.dataset.color;
+                    });
+                });
+
+                showCurrentPage();
+            </script>
+        </body>
+        </html>
+    
