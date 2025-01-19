@@ -263,6 +263,7 @@
                 <option value="8">8 صفحات</option>
                 <option value="9">9 صفحات</option>
                 <option value="10">10 صفحات</option>
+                         <option value="20">20 صفحات</option> 
             </select>
         </div>
 
@@ -313,65 +314,71 @@
             document.getElementById('page-count').value = pageCount;
         }
 
-        function updateDropdown() {
-            let pageCount = localStorage.getItem('pageCount') || 3;
-            let pagesSelect = document.getElementById('pages');
-            pagesSelect.innerHTML = '';
+function updateDropdown() {
+    let pageCount = localStorage.getItem('pageCount') || 3;
+    let pagesSelect = document.getElementById('pages');
+    pagesSelect.innerHTML = '';
 
-            if (pageCount == 1) {
-                // إذا كان عدد الصفحات 1، ننشئ روابط بنمط 1-1, 2-2, إلخ
-                for (let i = 1; i <= 604; i++) {
-                    let link = `https://read-quran.github.io/quran/1-Pages/${i}-${i}`;
-                    let option = document.createElement("option");
-                    option.value = link;
-                    option.text = `${i} إلى ${i}`;
-                    pagesSelect.appendChild(option);
-                }
-            } else {
-                // إذا كان عدد الصفحات أكثر من 1، ننشئ الروابط كما كانت
-                for (let i = 1; i <= 604; i += parseInt(pageCount)) {
-                    let end = i + parseInt(pageCount) - 1;
-                    if (end > 604) end = 604;
-                    let link = `https://read-quran.github.io/quran/${pageCount}-Pages/${end}-${i}`;
-                    let option = document.createElement("option");
-                    option.value = link;
-                    option.text = `${i} إلى ${end}`;
-                    pagesSelect.appendChild(option);
-                }
-            }
+    if (pageCount == 1) {
+        // إذا كان عدد الصفحات 1، ننشئ روابط بنمط 1، 2، 3، إلخ
+        for (let i = 1; i <= 604; i++) {
+            let link = `https://read-quran.github.io/quran/1-Pages/${i}`; // الرابط: 1 بدلاً من 1-1
+            let option = document.createElement("option");
+            option.value = link;
+            option.text = `${i}`; // النص المعروض: 1، 2، 3، إلخ
+            pagesSelect.appendChild(option);
         }
-
-        function shareOnWhatsApp() {
-            let pageSelect = document.getElementById("pages");
-            let pageText = pageSelect.options[pageSelect.selectedIndex].text;
-            let pageLink = pageSelect.value;
-            let title = document.getElementById("title").value;
-            let now = new Date();
-            let days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-            let dayName = days[now.getDay()];
-            let formattedDate = now.toLocaleString("en-OM", {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            let formattedTime = now.toLocaleTimeString("en-OM", {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            });
-
-            let message = `${title} | الصفحات من ${pageText} | الرابط: ${pageLink}`;
-            let whatsappLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-            document.getElementById("whatsapp-link").href = whatsappLink;
-
-            saveLastShared(dayName, formattedDate, formattedTime, title, pageText, pageLink);
-            saveLastSelectedPage(pageSelect.selectedIndex);
-
-            // حفظ آخر نطاق صفحات تمت مشاركته
-            localStorage.setItem("lastSharedPages", pageText);
-            updateLastSharedPages(); // تحديث العرض
+    } else {
+        // إذا كان عدد الصفحات أكثر من 1، ننشئ الروابط كما كانت
+        for (let i = 1; i <= 604; i += parseInt(pageCount)) {
+            let end = i + parseInt(pageCount) - 1;
+            if (end > 604) end = 604;
+            let link = `https://read-quran.github.io/quran/${pageCount}-Pages/${end}-${i}`;
+            let option = document.createElement("option");
+            option.value = link;
+            option.text = `${i} إلى ${end}`;
+            pagesSelect.appendChild(option);
         }
+    }
+}
+
+function shareOnWhatsApp() {
+    let pageSelect = document.getElementById("pages");
+    let pageText = pageSelect.options[pageSelect.selectedIndex].text;
+    let pageLink = pageSelect.value;
+    let title = document.getElementById("title").value;
+    let now = new Date();
+    let days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+    let dayName = days[now.getDay()];
+    let formattedDate = now.toLocaleString("en-OM", {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    let formattedTime = now.toLocaleTimeString("en-OM", {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+
+    let message;
+    if (localStorage.getItem('pageCount') == 1) {
+        message = `${title} | الصفحة ${pageText} | الرابط: ${pageLink}`; // إذا كانت صفحة واحدة، نستخدم النص "الصفحة 1"
+    } else {
+        message = `${title} | الصفحات من ${pageText} | الرابط: ${pageLink}`;
+    }
+
+    let whatsappLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+    document.getElementById("whatsapp-link").href = whatsappLink;
+
+    saveLastShared(dayName, formattedDate, formattedTime, title, pageText, pageLink);
+    saveLastSelectedPage(pageSelect.selectedIndex);
+
+    // حفظ آخر نطاق صفحات تمت مشاركته
+    localStorage.setItem("lastSharedPages", pageText);
+    updateLastSharedPages(); // تحديث العرض
+}
 
         function updateLastSharedPages() {
             let lastSharedPages = localStorage.getItem("lastSharedPages");
@@ -387,25 +394,25 @@
             }
         }
 
-        function saveLastShared(dayName, formattedDate, formattedTime, title, pageText, pageLink) {
-              let now = new Date();
+function saveLastShared(dayName, formattedDate, formattedTime, title, pageText, pageLink) {
+    let now = new Date();
     let formattedDateArabic = now.toLocaleDateString('ar-LY', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
 
-            let lastShared = `
-                <div class="box"><span>آخر يوم مشاركة:</span> ${dayName}</div>
-                <div class="box"><span>التاريخ:</span> ${formattedDateArabic}</div>
-                <div class="box"><span>الساعة:</span> ${formattedTime}</div>
-                <div class="box"><span>العنوان:</span> ${title}</div>
-                <div class="box pages-box"><span>الصفحات:</span> ${pageText}</div>
-                <div class="box"><span>الرابط:</span> <a href="${pageLink}" target="_blank">${pageLink}</a></div>
-            `;
-            localStorage.setItem("lastShared", lastShared);
-            document.getElementById("last-shared").innerHTML = '<div class="title">آخر صفحة تمت مشاركتها</div>' + lastShared;
-        }
+    let lastShared = `
+        <div class="box"><span>آخر يوم مشاركة:</span> ${dayName}</div>
+        <div class="box"><span>التاريخ:</span> ${formattedDateArabic}</div>
+        <div class="box"><span>الساعة:</span> ${formattedTime}</div>
+        <div class="box"><span>العنوان:</span> ${title}</div>
+        <div class="box pages-box"><span>الصفحات:</span> ${pageText}</div>
+        <div class="box"><span>الرابط:</span> <a href="${pageLink}" target="_blank">${pageLink}</a></div>
+    `;
+    localStorage.setItem("lastShared", lastShared);
+    document.getElementById("last-shared").innerHTML = '<div class="title">آخر صفحة تمت مشاركتها</div>' + lastShared;
+}
       
       // حفظ آخر اختيار للصفحات
 function saveLastSelectedPage() {
